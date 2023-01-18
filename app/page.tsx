@@ -1,91 +1,67 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from './page.module.css'
+import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 
-const inter = Inter({ subsets: ['latin'] })
+import Header from "./header";
 
-export default function Home() {
+import ThumbnailImage from '../assetsMock/thumbnail.webp';
+import ProfileImage from '../assetsMock/profile.jpg';
+
+const MockData: ThumbnailData = {
+  thumbnailImg: ThumbnailImage,
+  profileImg: ProfileImage,
+  title: 'The Biggest AI Problem !',
+  author: 'Anastasia',
+  stats: '31 k views',
+  date: '2 weeks ago',
+  videoId: '1321312',
+}
+
+interface ThumbnailData {
+  thumbnailImg: StaticImageData | string
+  profileImg: StaticImageData | string
+  title: string
+  author: string
+  stats: string
+  date: string
+  videoId: string
+}
+
+interface ThumbnailProps {
+  data: ThumbnailData
+}
+
+function Thumbnail(props: ThumbnailProps): JSX.Element {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <Link href={`/watch/${props.data.videoId}`}>
+      <div className="w-72 h-60 flex flex-col gap-1 hover:bg-slate-700 hover:rounded-xl hover:cursor-pointer">
+        <Image className="rounded-xl select-none" draggable={false} src={props.data.thumbnailImg} alt='' />
+        <div className="flex gap-2 p-2">
+          <div className="w-8">
+            <Image height={52} width={52} className='rounded-full select-none' draggable={false} src={props.data.profileImg} alt='' />
+          </div>
+          <div className="flex flex-col justify-center text-slate-300">
+            <h1 className="text-base">{props.data.title}</h1>
+            <Link href={`/channel/${props.data.author.toLowerCase()}`} className="text-sm select-none mb-0 hover:text-slate-100">
+              {props.data.author}
+            </Link>
+            <div className="inline-flex">
+              <span className="text-xs select-none">{props.data.stats}&nbsp;-&nbsp;</span>
+              <span className="text-xs select-none">{props.data.date}</span>
+            </div>
+          </div>
         </div>
       </div>
+    </Link>
+  );
+}
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
-        </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+export default function Home(): JSX.Element {
+  return (
+    <>
+      <Header />
+      <main className="w-full max-w-[120rem] mx-auto flex flex-wrap gap-4 mt-24 items-center justify-center">
+        {[...Array(120)].map((e, i) => <Thumbnail key={i} data={MockData} />)}
+      </main>
+    </>
   )
 }
